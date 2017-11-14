@@ -15,7 +15,7 @@ The application we want to deploy is [ghost](https://www.npmjs.com/package/ghost
 
 And finally, a REST API service to deploy the application in a simple way (the technology and framework is up to you!).
 
-Find below the diagram to make an idea of the architecture we want to deploy.
+Find below the diagram to have an idea of the architecture we want you to develop.
 
 ![diagram](images/diagram.jpeg)
 
