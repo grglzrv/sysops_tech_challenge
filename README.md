@@ -17,7 +17,7 @@ And finally, a REST API service to deploy the application in a simple way (the t
 
 Find below the diagram to make an idea of the architecture we want to deploy.
 
-![diagram](diagram.png)
+![diagram](diagram.jpeg)
 
 ## Requirements
 * Be executable, we should be able to run it in a simple way. That means a command/script/tool to spin up the environment and to be able to access the ghost application. We do not expect any content except the default from the ghost application.
