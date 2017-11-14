@@ -9,7 +9,7 @@ Set up a simple 3-tier tech stack, using the following components:
 * Database server with persistent storage.
 * Deployment REST API to update the deployed application.
 
-All tiers must be running as containers, what also implies high availability, and in the case of the database, persistent storage.
+All tiers must be running as containers, that also implies high availability, and in the case of the database, persistent storage.
 
 The application we want to deploy is [ghost](https://www.npmjs.com/package/ghost). So you'll have to take into account that rolling updates should work with zero downtime.
 
