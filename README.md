@@ -61,7 +61,7 @@ Hello, I have expored and tested different Docker Orchistration tools ( Marathon
 ### [**Docker Research of Trends 2017 and Use Cases**](/Thoughts.md)
 ##
 #### Additional Technologies tested:
-Ansible - Docker modules. ( After I explored this option and tested on environment, decided to skip it as this gives another type of functionalities are entitled with further dependencies
+Ansible - Docker modules. ( After I explored this option and tested on environment, decided to skip it as this gives another type of functionalities are releated with further dependency management.
 ##
 ##
 
