@@ -20,7 +20,7 @@ Requirements:
 
 ---------
 ###
-##### **Ghost(2x) + Mariadb(master) + Mariadb(slave) + HaProxy (loadbalancer)**  
+#### **Ghost(2x) + Mariadb(master) + Mariadb(slave) + HaProxy (loadbalancer)**  
 ###
 ###
 -------------------
@@ -31,7 +31,7 @@ Requirements:
 
 ##### **Ansible during deployment options - "swarm" or "compose"**
 ###
-/group_var/all.yml - setup docker user
+##### /group_var/all.yml - setup docker user - {{ system_user }}
 ##
 ##
 
