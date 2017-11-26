@@ -1,6 +1,7 @@
 # ANSIBLE PLAYBOOK
 #### **Systems Operations - Technical Challenge** 
 (https://github.com/oxie/sysops_tech_challenge)
+###
 Description:
 A simple 3-tier tech stack, using the following components:
 - A load balancer.
@@ -58,7 +59,7 @@ Requirements:
 Hello, I have expored and tested different Docker Orchistration tools ( Marathon, DC/OS/, Shipyard, Portainer, Swarmui etc..), but i've come up with the conclusion that if i want to keep the environment clean and light-weight to its possible maximum i should put aside all unessessary containers. That is the reason for which i decided to use the Docker Swarm Orchistration in combination with docker-compose and docker stack as most optimized option. Docker Swarm mode is a completely integrated scalable platform that has great features out of the box with a simple CLI command management.
 
 ##### **Docker Research and Development Thoughts** 
-[./Thoughts.md]
+[/Thoughts.md]
 
 
 
