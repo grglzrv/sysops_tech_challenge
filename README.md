@@ -1,30 +1,66 @@
-# Systems Operations - Technical Challenge
+# ANSIBLE PLAYBOOK
+#### **Systems Operations - Technical Challenge** 
+(https://github.com/oxie/sysops_tech_challenge)
+Description:
+A simple 3-tier tech stack, using the following components:
+- A load balancer.
+- Application server.
+- Database server with persistent storage.
+- Deployment REST API to update the deployed application.
+- All tiers must be running as containers, that also implies high availability, and in the case of the database, persistent storage.
 
-Hi candidate!! You're about to experience the technical challenge. We recomend you to fork this repo as it could change at any time before you start working on it.
+Requirements:
+ - Be executable, we should be able to run it in a simple way. That means a  - command/script/tool to spin up the environment and to be able to access the ghost application. We do not expect any content except the default from the ghost application.
+ - Use containers.
+ - Use an automation tool (we prefer ansible, but use what you know).
+ - Extra points for using an orchestrator (docker swarm, kubernetes, apache  - marathon).
+ - All your work must be shared using a git repository that we can clone.
 
-## Premise
-Set up a simple 3-tier tech stack, using the following components:
-* A load balancer.
-* Application server.
-* Database server with persistent storage.
-* Deployment REST API to update the deployed application.
 
-All tiers must be running as containers, that also implies high availability, and in the case of the database, persistent storage.
+---------
+###
+##### **Ghost(2x) + Mariadb(master) + Mariadb(slave) + HaProxy (loadbalancer)**  
+###
+###
+-------------------
+##
+##### Run ansible towards custom host file.
+##
+`ansible-playbook -i hostsfile playbook.yml -vvv`
 
-The application we want to deploy is [ghost](https://www.npmjs.com/package/ghost). So you'll have to take into account that rolling updates should work with zero downtime.
+##### **Ansible during deployment options - "swarm" or "compose"**
+###
+##
 
-And finally, a REST API service to deploy the application in a simple way (the technology and framework is up to you!).
+##### ***Based on:***
+###
+##
+| Image| Source|
+| ------ | ------ |
+| bitnami/mariadb:latest| [https://github.com/bitnami/bitnami-docker-mariadb]  |
+| bitnami/ghost:lates| [https://github.com/bitnami/bitnami-docker-ghost] |
+| dockercloud/haproxy | [https://github.com/docker/dockercloud-haproxy] |
+| djenriquez/sherpa| [https://github.com/djenriquez/sherpa] |
 
-Find below the diagram to have an idea of the architecture we want you to develop.
 
-![diagram](images/diagram.jpeg)
+### **Featured Setup:**
+- Docker swarm mode initiated for orchistration.
+- 2x docker-compose file used  - for v2 and v3 of compose and stack.
+- Additional Swarm Network - ghost-tier.
+- Containers started as scalable services.
+- Used docker container for exposing Docker REST API to HTTP on port 8080.
 
-## Requirements
-* Be executable, we should be able to run it in a simple way. That means a command/script/tool to spin up the environment and to be able to access the ghost application. We do not expect any content except the default from the ghost application.
-* Use containers.
-* Use an automation tool (we prefer ansible, but use what you know).
-* Extra points for using an orchestrator (docker swarm, kubernetes, apache marathon).
-* All your work must be shared using a git repository that we can clone.
+**Example Curl Request:**
+` curl http://localhost:8080/images/json `
 
-## Follow-up
-After the challenge has been returned we will go through the returnables and if we are impressed, we will schedule a follow up call where we go through the result and the thought process behind the solution.
+
+### Final Thoughts:
+Hello, I have expored and tested different Docker Orchistration tools ( Marathon, DC/OS/, Shipyard, Portainer, Swarmui etc..), but i've come up with the conclusion that if i want to keep the environment clean and light-weight to its possible maximum i should put aside all unessessary containers. That is the reason for which i decided to use the Docker Swarm Orchistration in combination with docker-compose and docker stack as most optimized option. Docker Swarm mode is a completely integrated scalable platform that has great features out of the box with a simple CLI command management.
+
+##### **Docker Research and Development Thoughts** 
+[./Thoughts.md]
+
+
+
+
+

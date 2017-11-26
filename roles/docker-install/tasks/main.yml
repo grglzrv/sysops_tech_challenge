@@ -1,0 +1,121 @@
+---
+- name: Install recommended package (to use AUFS storage drivers)
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    install_recommends: no
+    state: present
+  with_items:
+  - linux-image-extra-virtual
+
+- name: Install packages necessary for APT to use a repository over HTTPS
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    install_recommends: no
+    state: present
+  with_items:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - software-properties-common
+
+- name: Add official Docker GPG key
+  apt_key:
+    id: 0EBFCD88
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+- name: Add official Docker APT repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+    update_cache: yes
+
+- name: Install docker-ce and docker-compose
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    install_recommends: yes
+    state: present
+  with_items:
+  - docker-ce
+  - docker-compose
+
+- name: Add users to the Docker group
+  user:
+    name: "{{ system_user }}"
+    groups: docker
+    append: yes
+
+
+- name: enable docker
+  service: enabled=yes name=docker
+
+
+- name: start docker
+  remote_user: "{{system_user}}" 
+  systemd:
+    name: docker
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  sudo: yes
+  sudo_user: "{{system_user}}"
+
+
+- name: Check if "Swarm Mode" is enabled.
+  shell: docker info
+  changed_when: False
+  register: docker_info
+
+- name: Swarm Init interface IP {{ansible_default_ipv4.address}}
+  shell: "docker swarm init --advertise-addr {{ansible_default_ipv4.address}}"
+  when: "docker_info.stdout.find('Swarm: active') == -1"
+
+
+- name: Fetch Docker-Compose.yml (v2) file to start cluster
+  copy:
+    src: "{{ role_path }}/files/v2/docker-compose.yml"
+    dest: "/home/{{ system_user }}"
+    owner: "{{ system_user }}"
+    group: docker
+    backup: yes
+  when: deploy_mode=="compose"
+
+- name: Start Docker in Compose Mode v2
+  shell: "/usr/bin/docker-compose up -d"
+  args:
+    chdir: "/home/{{system_user}}/"
+  when: deploy_mode=="compose"
+  sudo: yes
+  sudo_user: "{{system_user}}"
+
+- name: Scale ghost service up to 2 containers
+  shell: "/usr/bin/docker-compose scale ghost=2"
+  args:
+    chdir: "/home/{{system_user}}/"
+  when: deploy_mode=="compose"
+  sudo: yes
+  sudo_user: "{{system_user}}"
+
+- name: Fetch Docker-Compose.yml (v3) file to start cluster
+  copy:
+    src: "{{ role_path }}/files/v3/docker-compose.yml"
+    dest: "/home/{{ system_user }}"
+    owner: "{{ system_user }}"
+    group: docker
+    backup: yes
+  when: deploy_mode=="swarm"
+
+- name: Start Docker in Swarm Mode compose-v3 - Stack Deploy 
+  shell: "/usr/bin/docker stack deploy -c docker-compose.yml ghost-stack"
+  args:
+    chdir: "/home/{{system_user}}/"
+  when: deploy_mode=="swarm"
+
+- name: Deploy small container for Docker Daemon Rest API on HTTP
+  shell: "docker run -d  --name sherpa -v /var/run/docker.sock:/tmp/docker.sock -p 8080:4550 djenriquez/sherpa --allow "
+  args:
+    chdir: "/home/{{system_user}}/"
+

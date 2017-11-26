@@ -1,0 +1,13 @@
+---
+- name: Install Docker
+  hosts: all
+  gather_facts: True
+  roles:
+      - docker-install
+  vars_prompt:
+      - name: "deploy_mode"
+        prompt: "Please Choose deploy mode - [compose] or [swarm]"
+        private: no
+#        confirm: yes
+
+

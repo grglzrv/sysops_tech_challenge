@@ -1,0 +1,112 @@
+version: '3'
+
+networks:
+  ghost-tier:
+    driver: overlay
+
+services:
+  
+  mariadb-master:
+    networks:
+      - ghost-tier
+    image: 'bitnami/mariadb:10.1'
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_ROOT_USER=root_user
+      - MARIADB_ROOT_PASSWORD=root_password #  root password on run
+      - MARIADB_USER=ghost_user
+      - MARIADB_DATABASE=ghost_database
+      - MARIADB_PASSWORD=ghost_password
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=ghostdb-replica-user
+      - MARIADB_REPLICATION_PASSWORD=ghostdb-replica-password
+    volumes:
+      - 'mariadb_data:/bitnami'
+    restart: unless-stopped # it gives us daemon tuning
+
+  mariadb-slave:
+    networks:
+      - ghost-tier
+    image: 'bitnami/mariadb:10.1'
+    links:
+      - mariadb-master
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      - MARIADB_USER=ghost_user
+      - MARIADB_DATABASE=ghost_database
+      - MARIADB_PASSWORD=ghost_password
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=ghostdb-replica-user
+      - MARIADB_REPLICATION_PASSWORD=ghostdb-replica-password
+      - MARIADB_MASTER_HOST=mariadb-master
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_ROOT_USER=root_user
+      - MARIADB_MASTER_ROOT_PASSWORD=root_password #  root password on run
+      # - ALLOW_EMPTY_PASSWORD=yes # skip passwords, allow all to login
+    volumes:
+      - 'mariadb_data:/bitnami'
+    restart: unless-stopped # it gives us daemon tuning
+
+
+  ghost:
+    image: 'bitnami/ghost:1'
+    networks:
+      - ghost-tier
+    environment:
+      - MARIADB_HOST=mariadb-master
+      - MARIADB_PORT_NUMBER=3306
+      - GHOST_DATABASE_USER=ghost_user
+      - GHOST_DATABASE_NAME=ghost_database
+      - MARIADB_PASSWORD=ghost_password
+      - GHOST_DATABASE_PASSWORD=ghost_password
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - GHOST_HOST=localhost
+      - SERVICE_PORTS="2368"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - 'ghost_data:/bitnami'
+    depends_on:
+      - mariadb-master
+
+
+  lb:
+    image: dockercloud/haproxy
+    links:
+      - ghost
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - BALANCE=leastconn
+      # - DOCKER_TLS_VERIFY
+      # - DOCKER_HOST
+      # - DOCKER_CERT_PATH
+    networks:
+      - ghost-tier
+    ports:
+      - '80:80'
+    links:
+      - ghost
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:
+    driver: local
+  ghost_data:
+    driver: local
+
+
