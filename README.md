@@ -58,8 +58,13 @@ Requirements:
 ### Final Thoughts:
 Hello, I have expored and tested different Docker Orchistration tools ( Marathon, DC/OS/, Shipyard, Portainer, Swarmui etc..), but i've come up with the conclusion that if i want to keep the environment clean and light-weight to its possible maximum i should put aside all unessessary containers. That is the reason for which i decided to use the Docker Swarm Orchistration in combination with docker-compose and docker stack as most optimized option. Docker Swarm mode is a completely integrated scalable platform that has great features out of the box with a simple CLI command management.
 
-##### **Docker Research and Development Thoughts** 
-[/Thoughts.md]
+### [**Docker Research of Trends 2017 and Use Cases**](/Thoughts.md)
+##
+#### Additional Technologies tested:
+Ansible - Docker modules. ( After I explored this option and tested on environment, decided to skip it as this gives another type of functionalities are entitled with further dependencies
+##
+##
+
 
 
 
