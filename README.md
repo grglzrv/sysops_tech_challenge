@@ -31,6 +31,8 @@ Requirements:
 
 ##### **Ansible during deployment options - "swarm" or "compose"**
 ###
+/group_var/all.yml - setup docker user
+##
 ##
 
 ##### ***Based on:***
