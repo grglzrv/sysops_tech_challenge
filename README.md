@@ -31,6 +31,9 @@ Requirements:
 
 ##### **Ansible during deployment options - "swarm" or "compose"**
 ###
+###
+**Both Options use swarm mode, compose - does deploy the containers through v2 docker-compose as service, swarm - does deploy throught docker stack commands**
+###
 ##### /group_var/all.yml - setup docker user - {{ system_user }}
 ##
 ##
