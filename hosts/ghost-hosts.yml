@@ -1,3 +1,0 @@
-[ghost-hosts]
-130.204.221.116 ansible_ssh_user=vallettix ansible_become_method=su ansible_connection=ssh
-

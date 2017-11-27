@@ -1,6 +1,6 @@
 # ANSIBLE PLAYBOOK
 #### **Systems Operations - Technical Challenge** 
-(https://github.com/oxie/sysops_tech_challenge)
+(https://github.com/oxie/sysops_tech_challenge/blob/master/challange/README-challange.md)
 ###
 Description:
 A simple 3-tier tech stack, using the following components:
